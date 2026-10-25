@@ -1,0 +1,2 @@
+# Backups that tools/text_review.py keeps next to cards.json. They are not part of the guide.
+locales/*/cards.before-*.json

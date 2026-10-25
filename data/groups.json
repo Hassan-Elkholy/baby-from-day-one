@@ -1,0 +1,17 @@
+[
+ {"id":"top","rank":5},
+ {"id":"all","all":true},
+ {"id":"sleep","topics":["sleep"],"cards":["sleepsudden","sleeptrain","routine","lovey","carsleep","sleepgear"]},
+ {"id":"feed","topics":["feed","milk2","solids","yearend"]},
+ {"id":"cry","topics":["cry","mind","feel"]},
+ {"id":"ill","topics":["fever","ill","infect"]},
+ {"id":"grow","topics":["move","checks","bymonth"],"cards":["vacbirth","vac2m","vac46","vac912","growthchart"]},
+ {"id":"play","topics":["talk"],"cards":["play612"]},
+ {"id":"body","topics":["body","nose","hair","bodycare","boysgirls"]},
+ {"id":"safe","topics":["safe","homesafe","safeinfo","people"]},
+ {"id":"out","topics":["out","outing","gear"]},
+ {"id":"mom","topics":["mom","mumbody"]},
+ {"id":"twins","topics":["twins"]},
+ {"id":"pets","topics":["pets"]},
+ {"id":"myths","topics":["myths"]}
+]

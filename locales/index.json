@@ -1,0 +1,14 @@
+[
+ {
+  "code": "ar",
+  "name": "العربية",
+  "dir": "rtl",
+  "complete": true
+ },
+ {
+  "code": "en",
+  "name": "English",
+  "dir": "ltr",
+  "complete": false
+ }
+]
