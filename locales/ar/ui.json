@@ -149,5 +149,8 @@
  "licenseUrl": "https://creativecommons.org/licenses/by/4.0/deed.ar",
  "installText": "ضيفي الدليل على الشاشة الرئيسية، ويفتح من غير نت.",
  "installBtn": "ضيفيه",
- "installNo": "مش دلوقتي"
+ "installNo": "مش دلوقتي",
+ "installTop": "نزّليه",
+ "iosSteps": ["دوسي على زرار المشاركة تحت (مربع طالع منه سهم).", "انزلي واختاري «إضافة إلى الشاشة الرئيسية».", "دوسي «إضافة» فوق."],
+ "iosDone": "خلاص ضفته"
 }

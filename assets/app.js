@@ -39,7 +39,7 @@ async function loadLang(code){
   document.getElementById('brand').textContent=U.title;
   { const hb=document.getElementById('homebtn'); hb.setAttribute('aria-label',U.home); hb.title=U.home; }
   document.getElementById('sos').textContent=U.emergency;
-  paintTheme();
+  paintTheme();paintInstall();
 }
 function applyRegion(){
   CARDS=K.cards.filter(c=>!c.region||c.region===region);
@@ -195,17 +195,44 @@ function openGroups(btn){lastFocus=btn;
   popEl.innerHTML=`<div class="shade" data-close></div><div class="pop" role="dialog" aria-modal="true" aria-labelledby="gt"><div class="sheet"><p class="num" id="gt">${esc(U.allTopics)}</p><div class="gsheet">${shownGroups().map(g=>`<button type="button" class="chip${g.all?' wide':''}" data-pick="${g.id}" aria-pressed="${g.id===group}">${esc(U.groups[g.id]||g.id)} <small>${groupCards(g.id).length}</small></button>`).join('')}</div><button type="button" class="x" data-close>${esc(U.close)}</button></div></div>`;
   popEl.hidden=false;popEl.querySelector('.x').focus()}
 
-// "Add to home screen": shown only when the browser offers it (assets/pwa.js, hosted site only), and not again once refused.
-function installBox(){if(!window.BG_INSTALL||store.get('bg-noinstall'))return'';
+// ---------- "add to home screen" (hosted site only, see assets/pwa.js) ----------
+// The top-bar button stays on every page until the guide is installed; the box on home can be put away with "not now".
+// Never offered twice: hidden when opened from the home screen, after the browser reports the install,
+// and in Chrome whenever it makes no offer (it doesn't while the guide is installed).
+// iPhone Safari has no install offer, so the button there shows the steps instead, until she says it's done.
+const standalone=()=>matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
+const iosSafari=()=>/iP(hone|ad|od)/.test(navigator.userAgent)&&/Safari/.test(navigator.userAgent)&&!/CriOS|FxiOS|EdgiOS/.test(navigator.userAgent);
+function installWay(){
+  if(!window.BG_PWA||standalone()||store.get('bg-installed'))return'';
+  if(window.BG_INSTALL)return'prompt';
+  return iosSafari()?'ios':''}
+const DL='<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M12 4v11m0 0-4.5-4.5M12 15l4.5-4.5M5 19h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+function paintInstall(){const b=document.getElementById('instbtn');if(!b||!U)return;
+  b.innerHTML=DL+`<span>${esc(U.installTop)}</span>`;b.setAttribute('aria-label',U.installText);b.hidden=!installWay();
+  const box=document.getElementById('install');if(box&&!installWay())box.remove()}
+async function doInstall(){const way=installWay();
+  if(way==='ios')return iosSteps();
+  const ev=window.BG_INSTALL;if(!ev)return;window.BG_INSTALL=null;
+  ev.prompt();try{const c=await ev.userChoice;if(c&&c.outcome==='accepted')store.set('bg-installed','1')}catch(e){}
+  paintInstall()}
+function iosSteps(){
+  popEl.innerHTML=`<div class="shade" data-close></div><div class="pop" role="dialog" aria-modal="true" aria-labelledby="it"><div class="sheet"><p class="num" id="it">${esc(U.installText)}</p><ol class="steps">${U.iosSteps.map(s=>`<li>${esc(s)}</li>`).join('')}</ol><button type="button" class="btn" id="iosdone">${esc(U.iosDone)}</button><button type="button" class="x" data-close>${esc(U.close)}</button></div></div>`;
+  popEl.hidden=false;
+  document.getElementById('iosdone').addEventListener('click',()=>{store.set('bg-installed','1');closePop();paintInstall()});
+  popEl.querySelector('.x').focus()}
+function installBox(){if(!installWay()||store.get('bg-noinstall'))return'';
   return `<div class="install" id="install"><p>${esc(U.installText)}</p><button type="button" class="btn" id="instyes">${esc(U.installBtn)}</button><button type="button" class="btn quiet" id="instno">${esc(U.installNo)}</button></div>`}
 function bindInstall(){const yes=document.getElementById('instyes');if(!yes)return;const box=document.getElementById('install');
-  yes.addEventListener('click',async()=>{const ev=window.BG_INSTALL;window.BG_INSTALL=null;box.remove();if(ev){ev.prompt();try{await ev.userChoice}catch(e){}}});
+  yes.addEventListener('click',()=>{box.remove();doInstall()});
   document.getElementById('instno').addEventListener('click',()=>{store.set('bg-noinstall','1');box.remove()})}
-addEventListener('bg-install',()=>{if(location.hash.slice(1) in {'':1,home:1})home()});
+document.getElementById('instbtn').addEventListener('click',doInstall);
+// The offer can come before the text has loaded; boot paints both the button and the box itself once it has.
+addEventListener('bg-install',()=>{if(!U)return;paintInstall();if(location.hash.slice(1) in {'':1,home:1}&&!document.getElementById('install')&&installBox())home()});
 
 // Home is the hub: what this is, search, the three other ways in, then the topics with their cards right under them.
 function home(){
   app.innerHTML=`<section class="view home">
+   ${installBox()}
    ${introBox()}
    <div class="search"><input id="q" type="search" placeholder="${esc(U.searchPlaceholder)}" aria-label="${esc(U.search)}" value="${esc(query)}" enterkeyhint="search" autocomplete="off">
    <div class="try"><span>${esc(U.tryLabel)}</span>${U.tryWords.map(w=>`<button type="button" class="tryw">${esc(w)}</button>`).join('')}</div></div>
@@ -214,7 +241,6 @@ function home(){
    ${ways()}
    ${browse()}
    ${prefs()}
-   ${installBox()}
    <footer class="foot"><p>${esc(U.disclaimer)}</p><p>${esc(U.about)}</p><p>${esc(U.privacy)}</p><p class="lic"><b>${esc(U.copyright)}</b> · <a href="${esc(U.licenseUrl)}" target="_blank" rel="noopener">${esc(U.licenseLink)}</a><br>${esc(U.licenseText)}</p></footer>
    </div></section>`;
   const q=document.getElementById('q'),res=document.getElementById('res'),rest=document.getElementById('rest');

@@ -28,7 +28,7 @@ Then open http://localhost:8000. Opening `index.html` straight from disk does no
 
 ## Install it like an app
 
-On the hosted site, phones offer "add to home screen". After one visit the guide opens with no internet: `sw.js` saves every file. `sw.js` is made by `tools/make_sw.py` in the full project; run it after any change, so phones pick up the new version.
+On the hosted site, an install button sits in the top bar of every page until the guide is installed, and a box at the top of home offers the same (it can be put away). Neither shows once the guide runs from the home screen, after the browser reports the install, or in Chrome when it makes no offer (it doesn't while installed). iPhone Safari has no install offer, so the button there shows the three steps. After one visit the guide opens with no internet: `sw.js` saves every file. `sw.js` is made by `tools/make_sw.py` in the full project; run it after any change, so phones pick up the new version.
 
 ## Licence
 

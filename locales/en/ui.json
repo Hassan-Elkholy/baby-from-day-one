@@ -149,5 +149,8 @@
  "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
  "installText": "Add the guide to your home screen; it opens without internet.",
  "installBtn": "Add",
- "installNo": "Not now"
+ "installNo": "Not now",
+ "installTop": "Install",
+ "iosSteps": ["Tap the Share button at the bottom (a square with an arrow).", "Scroll down and pick “Add to Home Screen”.", "Tap “Add” at the top."],
+ "iosDone": "Done, I added it"
 }
