@@ -67,7 +67,8 @@ function relatedHTML(c){const ids=((K.related||{})[c.id]||[]).filter(id=>BY[id])
   return `<div class="rel"><p class="lab">${esc(U.related)}</p><div class="relrow">${ids.map(id=>xref(id)).join('')}</div></div>`}
 function fmt(s,n){return fmtText(s,n).replace(XREF,(m,id,l)=>xref(id,l))}
 function fmtText(s,n){
-  return esc(s).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/\[\^([\w,]+)\]/g,(m,ids)=>
+  // A newline in the text is a new line on screen: one idea per line reads easier than commas.
+  return esc(s).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/\n/g,'<br>').replace(/\[\^([\w,]+)\]/g,(m,ids)=>
     ids.split(',').map(id=>{if(!SRC[id]){console.warn('unknown source',id);return''}const k=n.num(id);
       return `<button type="button" class="fn" data-src="${id}" data-n="${k}" aria-label="${esc(fill(U.sourceN,{n:k}))}">${k}</button>`}).join(''));
 }
